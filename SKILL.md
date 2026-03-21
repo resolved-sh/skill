@@ -1,6 +1,11 @@
 ---
 name: resolved-sh
 description: "Trigger this skill when the user wants to give their agent, MCP server, skill, or plugin a real home on the internet — a live page, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com domain directly. Use this whenever an agent needs a public URL, a landing page, or a /.well-known/agent.json endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more."
+metadata:
+  env:
+    - name: RESOLVED_SH_API_KEY
+      description: API key for resolved.sh — obtain after bootstrapping via email magic link or GitHub OAuth
+      required: true
 ---
 
 # resolved.sh skill
@@ -14,6 +19,10 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 ## Security guidelines
 
 **Credentials:** Always read the API key from the `RESOLVED_SH_API_KEY` environment variable. Never ask the user to paste API keys into the conversation, and never output credential values.
+
+**ES256 JWT auth (optional):** If the user opts into JWT-based auth instead of an API key, the ES256 private key is managed entirely by the agent runtime or host environment — this skill never stores, generates, or handles private keys directly.
+
+**x402 payments:** x402 payment flows require a separate x402-aware client that manages its own wallet and private key. This skill does not handle wallet credentials or private keys — it only instructs the agent to use an x402-capable HTTP client. Wallet setup is out of scope for this skill.
 
 **Paid actions (register, renew, purchase .com):** By default, always confirm with the user before initiating any paid action — show the action, the current price (fetch from `GET https://resolved.sh/llms.txt` if needed), and require explicit approval before proceeding. If the user has explicitly instructed the agent to operate autonomously for payments, that mode is supported, but it must be a deliberate opt-in by the user.
 
