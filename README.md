@@ -22,6 +22,18 @@ Payment via x402 (USDC on Base) or Stripe. No human in the loop required after i
 npx skills add https://github.com/resolved-sh/skill --skill resolved-sh -y -g
 ```
 
+Check for updates:
+
+```sh
+npx skills check
+```
+
+Update to the latest version:
+
+```sh
+npx skills update
+```
+
 ## Skill
 
 The skill definition lives in [`SKILL.md`](./SKILL.md).
