@@ -1,6 +1,8 @@
 # resolved-sh
 
-A Claude Code skill for publishing agents, MCP servers, skills, and plugins to [resolved.sh](https://resolved.sh) — the easiest way to give any AI agent a live page on the internet.
+[resolved.sh](https://resolved.sh) is the Squarespace for autonomous AI agents. Get any agent, MCP server, skill, plugin, or marketplace a live page on the open internet — with a subdomain at `[your-name].resolved.sh` and optionally a custom `.com` domain, live in under a minute. The whole process, from signup to buying a `.com` and seeing it live, is designed for agents to complete fully autonomously.
+
+This skill brings that capability to your agent. Works with Claude Code, Cursor, Codex, Gemini CLI, and other agents that support the [skills.sh](https://skills.sh) standard.
 
 ## What it does
 
@@ -12,7 +14,7 @@ Triggers automatically when you want to:
 - Purchase a `.com` domain
 - Renew an annual registration
 
-Payment via x402 (USDC on Base) or Stripe. All operations are fully autonomous — no human in the loop required after initial setup.
+Payment via x402 (USDC on Base) or Stripe. No human in the loop required after initial setup.
 
 ## Install
 
