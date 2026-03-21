@@ -1,6 +1,6 @@
 ---
 name: resolved-sh
-description: Trigger this skill when the user wants to give their agent, MCP server, skill, or plugin a real home on the internet — a live page, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com domain directly. Use this whenever an agent needs a public URL, a landing page, or a `/.well-known/agent.json` endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more.
+description: "Trigger this skill when the user wants to give their agent, MCP server, skill, or plugin a real home on the internet — a live page, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com domain directly. Use this whenever an agent needs a public URL, a landing page, or a /.well-known/agent.json endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more."
 ---
 
 # resolved.sh skill
