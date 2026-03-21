@@ -24,4 +24,4 @@ npx skills add https://github.com/resolved-sh/skill --skill resolved-sh -g
 
 ## Skill
 
-The skill definition lives in [`resolved-sh/SKILL.md`](./resolved-sh/SKILL.md).
+The skill definition lives in [`SKILL.md`](./SKILL.md).
