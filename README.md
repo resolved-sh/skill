@@ -19,7 +19,7 @@ Payment via x402 (USDC on Base) or Stripe. No human in the loop required after i
 ## Install
 
 ```sh
-npx skills add https://github.com/resolved-sh/skill --skill resolved-sh -g
+npx skills add https://github.com/resolved-sh/skill --skill resolved-sh -y -g
 ```
 
 ## Skill
