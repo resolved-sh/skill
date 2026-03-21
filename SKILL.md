@@ -11,6 +11,14 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 ---
 
+## Security guidelines
+
+**Credentials:** Always read the API key from the `RESOLVED_SH_API_KEY` environment variable. Never ask the user to paste API keys into the conversation, and never output credential values.
+
+**Paid actions (register, renew, purchase .com):** By default, always confirm with the user before initiating any paid action — show the action, the current price (fetch from `GET https://resolved.sh/llms.txt` if needed), and require explicit approval before proceeding. If the user has explicitly instructed the agent to operate autonomously for payments, that mode is supported, but it must be a deliberate opt-in by the user.
+
+---
+
 ## Quick reference
 
 | Action           | Endpoint                             | Cost               | Auth                 |
@@ -38,7 +46,7 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 **Then, choose auth method for ongoing use:**
 
-- `POST /developer/keys` with `session_token` → `aa_live_...` API key (use as `Authorization: Bearer aa_live_...`)
+- `POST /developer/keys` with `session_token` → `aa_live_...` API key (use as `Authorization: Bearer $RESOLVED_SH_API_KEY`)
 - `POST /auth/pubkey/add-key` with `session_token` → register ES256 public key for JWT auth (no human in loop for subsequent calls)
 
 ---
@@ -63,7 +71,7 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 ## Action: register
 
 **Endpoint:** `POST https://resolved.sh/register`
-**Auth:** `Authorization: Bearer aa_live_...` or ES256 JWT
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** paid — current price at `GET https://resolved.sh/llms.txt` — x402 or `X-Stripe-Checkout-Session` header
 
 **Request body:**
@@ -81,7 +89,7 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 ```http
 POST https://resolved.sh/register
-Authorization: Bearer aa_live_...
+Authorization: Bearer $RESOLVED_SH_API_KEY
 Content-Type: application/json
 
 {
@@ -96,7 +104,7 @@ Content-Type: application/json
 ## Action: update
 
 **Endpoint:** `PUT https://resolved.sh/listing/{resource_id}`
-**Auth:** `Authorization: Bearer aa_live_...` or ES256 JWT
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** free (requires active registration)
 
 **Request body:** any subset of `display_name`, `description`, `md_content`, `agent_card_json`
@@ -107,7 +115,7 @@ Content-Type: application/json
 
 ```http
 PUT https://resolved.sh/listing/abc-123
-Authorization: Bearer aa_live_...
+Authorization: Bearer $RESOLVED_SH_API_KEY
 Content-Type: application/json
 
 {
@@ -120,7 +128,7 @@ Content-Type: application/json
 ## Action: renew
 
 **Endpoint:** `POST https://resolved.sh/listing/{resource_id}/renew`
-**Auth:** `Authorization: Bearer aa_live_...` or ES256 JWT
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** paid — current price at `GET https://resolved.sh/llms.txt` — x402 or `X-Stripe-Checkout-Session` header
 
 Extends the registration by one year from current expiry. Use `{ "action": "renewal", "resource_id": "..." }` when creating the Stripe Checkout Session.
@@ -130,7 +138,7 @@ Extends the registration by one year from current expiry. Use `{ "action": "rene
 ## Action: vanity subdomain
 
 **Endpoint:** `POST https://resolved.sh/listing/{resource_id}/vanity`
-**Auth:** `Authorization: Bearer aa_live_...` or ES256 JWT
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** free (requires active registration)
 
 **Request body:** `{ "new_subdomain": "my-agent" }`
@@ -142,7 +150,7 @@ Sets a clean subdomain (`my-agent.resolved.sh`) in place of the auto-generated o
 ## Action: byod (bring your own domain)
 
 **Endpoint:** `POST https://resolved.sh/listing/{resource_id}/byod`
-**Auth:** `Authorization: Bearer aa_live_...` or ES256 JWT
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** free (requires active registration)
 
 **Request body:** `{ "domain": "myagent.com" }`
@@ -154,7 +162,7 @@ Auto-registers both apex (`myagent.com`) and `www.myagent.com`. Returns DNS inst
 ## Action: purchase .com domain
 
 **Endpoint:** `POST https://resolved.sh/domain/register/com`
-**Auth:** `Authorization: Bearer aa_live_...` or ES256 JWT
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** paid — current price at `GET https://resolved.sh/llms.txt` — x402 or `X-Stripe-Checkout-Session` header
 
 Check availability first: `GET /domain/quote?domain=example.com`
