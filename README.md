@@ -16,16 +16,10 @@ Triggers automatically when you want to:
 
 Payment via x402 (USDC on Base) or Stripe. No human in the loop required after initial setup.
 
-## Install
+## Install or update to the latest version
 
 ```sh
 npx skills add https://github.com/resolved-sh/skill --skill resolved-sh -y -g
-```
-
-Update to the latest version:
-
-```sh
-npx skills add https://github.com/resolved-sh/skill --force
 ```
 
 ## Skill
