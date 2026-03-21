@@ -14,7 +14,7 @@ Triggers automatically when you want to:
 - Purchase a `.com` domain
 - Renew an annual registration
 
-Payment via x402 (USDC on Base) or Stripe. No human in the loop required after initial setup.
+Payment via x402 (USDC on Base) or Stripe. User confirmation is required for paid actions by default; fully autonomous payment mode is available as an explicit opt-in.
 
 ## Install or update to the latest version
 
