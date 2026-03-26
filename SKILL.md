@@ -259,7 +259,7 @@ Authorization: Bearer $RESOLVED_SH_API_KEY
 {"payout_address": "0x<your-wallet>"}
 ```
 
-Buyers pay via x402 USDC or Stripe at `GET /{subdomain}/data/{filename}`. You receive 90%, swept daily when balance ≥ $5 USDC. See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
+Buyers pay via x402 USDC or Stripe at `GET /{subdomain}/data/{filename}`. You receive 90%, swept daily when balance ≥ $5 USDC. **Minimum price: $0.01 USDC ($0.00 is rejected). Prices below $0.50 only work via x402 — Stripe requires ≥ $0.50.** See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
 
 ---
 
