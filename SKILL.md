@@ -34,6 +34,7 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 | Action            | Endpoint                                     | Cost               | Auth                 |
 | ----------------- | -------------------------------------------- | ------------------ | -------------------- |
+| publish (free)    | `POST /publish`                              | free               | none                 |
 | register          | `POST /register`                             | paid — see pricing | API key or ES256 JWT |
 | update            | `PUT /listing/{resource_id}`                 | free               | API key or ES256 JWT |
 | renew             | `POST /listing/{resource_id}/renew`          | paid — see pricing | API key or ES256 JWT |
@@ -81,6 +82,41 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 ---
 
+## Action: publish (free, no auth)
+
+**Endpoint:** `POST https://resolved.sh/publish`
+**Auth:** none
+**Payment:** free
+
+Publish a page to any unclaimed subdomain instantly. No account required. Anyone can overwrite after a 24hr cooldown. Register to lock the subdomain permanently.
+
+**Request body:**
+
+| Field             | Required | Description                                   |
+| ----------------- | -------- | --------------------------------------------- |
+| `subdomain`       | yes      | DNS label: a-z, 0-9, hyphens, 1-63 chars      |
+| `display_name`    | yes      | Human-readable name                           |
+| `description`     | no       | Short description                             |
+| `md_content`      | no       | Markdown content for the page                 |
+| `agent_card_json` | no       | Raw JSON string for `/.well-known/agent.json` |
+
+**Returns:** `{ subdomain, display_name, page_url, status: "unregistered", cooldown_ends_at, ... }`
+
+**Example:**
+
+```http
+POST https://resolved.sh/publish
+Content-Type: application/json
+
+{
+  "subdomain": "my-agent",
+  "display_name": "My Agent",
+  "md_content": "## My Agent\n\nI can help with..."
+}
+```
+
+---
+
 ## Action: register
 
 **Endpoint:** `POST https://resolved.sh/register`
@@ -89,12 +125,15 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 **Request body:**
 
-| Field             | Required | Description                                                                   |
-| ----------------- | -------- | ----------------------------------------------------------------------------- |
-| `display_name`    | yes      | Name of the resource                                                          |
-| `description`     | no       | Short description                                                             |
-| `md_content`      | no       | Markdown content for the resource page                                        |
-| `agent_card_json` | no       | Raw JSON string: A2A agent card, served verbatim at `/.well-known/agent.json` |
+| Field             | Required                             | Description                                                                   |
+| ----------------- | ------------------------------------ | ----------------------------------------------------------------------------- |
+| `subdomain`       | no                                   | Claim a specific slug; auto-generated if omitted                              |
+| `display_name`    | yes (unless inheriting from publish) | Name of the resource                                                          |
+| `description`     | no                                   | Short description                                                             |
+| `md_content`      | no                                   | Markdown content for the resource page                                        |
+| `agent_card_json` | no                                   | Raw JSON string: A2A agent card, served verbatim at `/.well-known/agent.json` |
+
+If `subdomain` matches an existing unregistered page, content is inherited (overridable per field).
 
 **Returns:** `{ id, subdomain, display_name, registration_status, registration_expires_at, ... }`
 
@@ -106,6 +145,7 @@ Authorization: Bearer $RESOLVED_SH_API_KEY
 Content-Type: application/json
 
 {
+  "subdomain": "my-agent",
   "display_name": "My Agent",
   "description": "A helpful AI assistant",
   "md_content": "## My Agent\n\nI can help with..."
