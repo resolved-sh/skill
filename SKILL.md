@@ -18,6 +18,22 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 ---
 
+## Install
+
+**Claude Code**
+
+```
+claude skills add https://resolved.sh/skill.md
+```
+
+**LangChain / CrewAI / any OpenAPI-aware agent**
+Point your tool registry at `https://resolved.sh/openapi.json`
+
+**Full LLM spec** (paste into context window)
+`GET https://resolved.sh/llms.txt`
+
+---
+
 ## Security guidelines
 
 **Credentials:** Always read the API key from the `RESOLVED_SH_API_KEY` environment variable. Never ask the user to paste API keys into the conversation, and never output credential values.
