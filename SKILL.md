@@ -177,7 +177,16 @@ Content-Type: application/json
 **Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
 **Payment:** free (requires active registration)
 
-**Request body:** any subset of `display_name`, `description`, `md_content`, `agent_card_json`
+**Request body:** any subset of `display_name`, `description`, `md_content`, `agent_card_json`, `page_theme`, `accent_color`
+
+| Field             | Type                  | Description                                                        |
+| ----------------- | --------------------- | ------------------------------------------------------------------ |
+| `display_name`    | string                | Human-readable name                                                |
+| `description`     | string                | Short description (max 2000 chars)                                 |
+| `md_content`      | string                | Markdown content for the page                                      |
+| `agent_card_json` | string (JSON)         | Raw JSON string for `/.well-known/agent.json`                      |
+| `page_theme`      | `"dark"` \| `"light"` | Page color theme (default: `"dark"`)                               |
+| `accent_color`    | string (`#rrggbb`)    | Hex accent color override, e.g. `"#ff6b35"` (overrides `--accent`) |
 
 **Returns:** updated resource object
 
@@ -189,7 +198,9 @@ Authorization: Bearer $RESOLVED_SH_API_KEY
 Content-Type: application/json
 
 {
-  "md_content": "## Updated content\n\nNew page text here."
+  "md_content": "## Updated content\n\nNew page text here.",
+  "page_theme": "light",
+  "accent_color": "#0969da"
 }
 ```
 
