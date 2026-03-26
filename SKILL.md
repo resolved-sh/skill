@@ -1,6 +1,6 @@
 ---
 name: resolved-sh
-description: "Trigger this skill when the user wants to give their agent, MCP server, skill, or plugin a real home on the internet — a live page, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com domain directly. Use this whenever an agent needs a public URL, a landing page, or a /.well-known/agent.json endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more."
+description: "Trigger this skill when the user wants to give their agent, MCP server, skill, or plugin a real home on the internet — a live page, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com or .sh domain directly. Use this whenever an agent needs a public URL, a landing page, or a /.well-known/agent.json endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more."
 metadata:
   env:
     - name: RESOLVED_SH_API_KEY
@@ -42,7 +42,7 @@ Point your tool registry at `https://resolved.sh/openapi.json`
 
 **x402 payments:** x402 payment flows require a separate x402-aware client that manages its own wallet and private key. This skill does not handle wallet credentials or private keys — it only instructs the agent to use an x402-capable HTTP client. Wallet setup is out of scope for this skill.
 
-**Paid actions (register, renew, purchase .com):** By default, always confirm with the user before initiating any paid action — show the action, the current price (fetch from `GET https://resolved.sh/llms.txt` if needed), and require explicit approval before proceeding. If the user has explicitly instructed the agent to operate autonomously for payments, that mode is supported, but it must be a deliberate opt-in by the user.
+**Paid actions (register, renew, purchase .com or .sh):** By default, always confirm with the user before initiating any paid action — show the action, the current price (fetch from `GET https://resolved.sh/llms.txt` if needed), and require explicit approval before proceeding. If the user has explicitly instructed the agent to operate autonomously for payments, that mode is supported, but it must be a deliberate opt-in by the user.
 
 ---
 
@@ -57,6 +57,7 @@ Point your tool registry at `https://resolved.sh/openapi.json`
 | vanity subdomain  | `POST /listing/{resource_id}/vanity`         | free               | API key or ES256 JWT |
 | byod              | `POST /listing/{resource_id}/byod`           | free               | API key or ES256 JWT |
 | purchase .com     | `POST /domain/register/com`                  | paid — see pricing | API key or ES256 JWT |
+| purchase .sh      | `POST /domain/register/sh`                   | paid — see pricing | API key or ES256 JWT |
 | upload data file  | `PUT /listing/{resource_id}/data/{filename}` | free to upload     | API key or ES256 JWT |
 | set payout wallet | `POST /account/payout-address`               | free               | API key or ES256 JWT |
 
@@ -92,7 +93,7 @@ Point your tool registry at `https://resolved.sh/openapi.json`
 
 **Stripe (credit card):**
 
-1. `POST /stripe/checkout-session` with `{ "action": "registration" }` (or `"renewal"`, `"domain_com"`) → `{ checkout_url, session_id }`
+1. `POST /stripe/checkout-session` with `{ "action": "registration" }` (or `"renewal"`, `"domain_com"`, `"domain_sh"`) → `{ checkout_url, session_id }`
 2. Open `checkout_url` in a browser to complete payment
 3. Poll `GET /stripe/checkout-session/{session_id}/status` until `status == "complete"` and `payment_status == "paid"`
 4. Submit the action route with `X-Stripe-Checkout-Session: cs_xxx` header
@@ -247,6 +248,20 @@ Auto-registers both apex (`myagent.com`) and `www.myagent.com`. Returns DNS inst
 **Payment:** paid — current price at `GET https://resolved.sh/llms.txt` — x402 or `X-Stripe-Checkout-Session` header
 
 Check availability first: `GET /domain/quote?domain=example.com`
+
+See `GET https://resolved.sh/llms.txt` for the full registrant detail fields required.
+
+---
+
+## Action: purchase .sh domain
+
+**Endpoint:** `POST https://resolved.sh/domain/register/sh`
+**Auth:** `Authorization: Bearer $RESOLVED_SH_API_KEY` or ES256 JWT
+**Payment:** paid — current price at `GET https://resolved.sh/llms.txt` — x402 or `X-Stripe-Checkout-Session` header
+
+Check availability first: `GET /domain/quote?domain=example.sh`
+
+Use `{ "action": "domain_sh", "resource_id": "..." }` when creating the Stripe Checkout Session.
 
 See `GET https://resolved.sh/llms.txt` for the full registrant detail fields required.
 
