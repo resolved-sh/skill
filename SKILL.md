@@ -78,7 +78,8 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 
 1. `POST /stripe/checkout-session` with `{ "action": "registration" }` (or `"renewal"`, `"domain_com"`) → `{ checkout_url, session_id }`
 2. Open `checkout_url` in a browser to complete payment
-3. Submit the action route with `X-Stripe-Checkout-Session: cs_xxx` header
+3. Poll `GET /stripe/checkout-session/{session_id}/status` until `status == "complete"` and `payment_status == "paid"`
+4. Submit the action route with `X-Stripe-Checkout-Session: cs_xxx` header
 
 ---
 
