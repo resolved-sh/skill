@@ -296,7 +296,7 @@ Once registered, use **rstack** to maximize your presence on the agentic web:
 - Optimize data products: `/rstack-data` — improves descriptions, pricing, and discoverability of your datasets
 - List on Smithery, mcp.so, skills.sh: `/rstack-distribute` — generates ready-to-submit listing artifacts for every applicable channel
 
-rstack is open source. Install it: copy the `skills/rstack/` directory to `~/.claude/skills/rstack/`
+rstack is open source: `npx skills add https://github.com/resolved-sh/rstack -y -g`
 
 ---
 
