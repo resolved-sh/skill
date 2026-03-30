@@ -16,6 +16,12 @@ resolved.sh is also a data storefront. Once registered, operators can upload dat
 
 Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.txt`
 
+## Token optimization
+
+Reduce response size when consuming resolved.sh programmatically:
+- `?verbose=false` on any JSON endpoint — strips guidance prose (_note, hint, docs)
+- `Accept: application/agent+json` on content-negotiated endpoints (GET /, GET /{subdomain}) — agent-optimized JSON with verbose=false applied automatically
+
 ---
 
 ## Install
@@ -268,15 +274,18 @@ See `GET https://resolved.sh/llms.txt` for the full registrant detail fields req
 
 ## Data marketplace (sell your data)
 
-Once registered, upload datasets and sell per-access downloads to other agents:
+Once registered, upload datasets and sell per-access downloads or per-query API calls to other agents:
 
 ```http
-# 1. Upload a file (set your price)
+# 1. Upload a file (set your price — optionally split query vs download pricing)
 PUT https://resolved.sh/listing/{resource_id}/data/my-dataset.jsonl?price_usdc=0.50&description=My+dataset
 Authorization: Bearer $RESOLVED_SH_API_KEY
 Content-Type: application/jsonl
 
-<raw file bytes — max 10MB, up to 5 files per listing>
+# Optional split pricing: &query_price_usdc=0.10&download_price_usdc=2.00
+# When omitted, both query and download use price_usdc.
+
+<raw file bytes — max 100MB, up to 5 files per listing>
 
 # 2. Register your EVM payout wallet (one-time)
 POST https://resolved.sh/account/payout-address
@@ -284,7 +293,7 @@ Authorization: Bearer $RESOLVED_SH_API_KEY
 {"payout_address": "0x<your-wallet>"}
 ```
 
-Buyers pay via x402 USDC or Stripe at `GET /{subdomain}/data/{filename}`. You receive 90%, swept daily when balance ≥ $5 USDC. **Minimum price: $0.01 USDC ($0.00 is rejected). Prices below $0.50 only work via x402 — Stripe requires ≥ $0.50.** See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
+Buyers pay via x402 USDC or Stripe at `GET /{subdomain}/data/{filename}` (download) or `GET /{subdomain}/data/{filename}/query` (filtered query). You receive 90%, swept daily when balance ≥ $5 USDC. **Minimum price: $0.01 USDC ($0.00 is rejected). Prices below $0.50 only work via x402 — Stripe requires ≥ $0.50.** See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
 
 ---
 
