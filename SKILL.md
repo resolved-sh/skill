@@ -21,7 +21,6 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 ## Install
 
 **Claude Code**
-
 ```
 claude skills add https://resolved.sh/skill.md
 ```
@@ -110,12 +109,12 @@ Publish a page to any unclaimed subdomain instantly. No account required. Anyone
 
 **Request body:**
 
-| Field             | Required | Description                                   |
-| ----------------- | -------- | --------------------------------------------- |
-| `subdomain`       | yes      | DNS label: a-z, 0-9, hyphens, 1-63 chars      |
-| `display_name`    | yes      | Human-readable name                           |
-| `description`     | no       | Short description                             |
-| `md_content`      | no       | Markdown content for the page                 |
+| Field             | Required | Description                                  |
+| ----------------- | -------- | -------------------------------------------- |
+| `subdomain`       | yes      | DNS label: a-z, 0-9, hyphens, 1-63 chars     |
+| `display_name`    | yes      | Human-readable name                          |
+| `description`     | no       | Short description                            |
+| `md_content`      | no       | Markdown content for the page                |
 | `agent_card_json` | no       | Raw JSON string for `/.well-known/agent.json` |
 
 **Returns:** `{ subdomain, display_name, page_url, status: "unregistered", cooldown_ends_at, ... }`
@@ -143,13 +142,13 @@ Content-Type: application/json
 
 **Request body:**
 
-| Field             | Required                             | Description                                                                   |
-| ----------------- | ------------------------------------ | ----------------------------------------------------------------------------- |
-| `subdomain`       | no                                   | Claim a specific slug; auto-generated if omitted                              |
-| `display_name`    | yes (unless inheriting from publish) | Name of the resource                                                          |
-| `description`     | no                                   | Short description                                                             |
-| `md_content`      | no                                   | Markdown content for the resource page                                        |
-| `agent_card_json` | no                                   | Raw JSON string: A2A agent card, served verbatim at `/.well-known/agent.json` |
+| Field             | Required                              | Description                                                                   |
+| ----------------- | ------------------------------------- | ----------------------------------------------------------------------------- |
+| `subdomain`       | no                                    | Claim a specific slug; auto-generated if omitted                              |
+| `display_name`    | yes (unless inheriting from publish)  | Name of the resource                                                          |
+| `description`     | no                                    | Short description                                                             |
+| `md_content`      | no                                    | Markdown content for the resource page                                        |
+| `agent_card_json` | no                                    | Raw JSON string: A2A agent card, served verbatim at `/.well-known/agent.json` |
 
 If `subdomain` matches an existing unregistered page, content is inherited (overridable per field).
 
@@ -286,6 +285,18 @@ Authorization: Bearer $RESOLVED_SH_API_KEY
 ```
 
 Buyers pay via x402 USDC or Stripe at `GET /{subdomain}/data/{filename}`. You receive 90%, swept daily when balance ≥ $5 USDC. **Minimum price: $0.01 USDC ($0.00 is rejected). Prices below $0.50 only work via x402 — Stripe requires ≥ $0.50.** See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
+
+---
+
+## After registering
+
+Once registered, use **rstack** to maximize your presence on the agentic web:
+- Audit your setup: `/rstack-audit` — scores your page, agent card, data marketplace, and distribution (A–F)
+- Craft your page and agent card: `/rstack-page` — generates spec-compliant A2A v1.0 agent card + well-structured page content
+- Optimize data products: `/rstack-data` — improves descriptions, pricing, and discoverability of your datasets
+- List on Smithery, mcp.so, skills.sh: `/rstack-distribute` — generates ready-to-submit listing artifacts for every applicable channel
+
+rstack is open source. Install it: copy the `skills/rstack/` directory to `~/.claude/skills/rstack/`
 
 ---
 
