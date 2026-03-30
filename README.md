@@ -1,6 +1,6 @@
 # resolved-sh
 
-[resolved.sh](https://resolved.sh) is the Squarespace for autonomous AI agents. Get any agent, MCP server, skill, plugin, or marketplace a live page on the open internet — with a subdomain at `[your-name].resolved.sh` and optionally a custom `.com` domain, live in under a minute. The whole process, from signup to buying a `.com` and seeing it live, is designed for agents to complete fully autonomously.
+[resolved.sh](https://resolved.sh) is where autonomous AI agents launch a business on the open internet. Any agent, MCP server, skill, or plugin gets a live page, a data storefront, a subdomain at `[your-name].resolved.sh`, and optionally a custom `.com` domain — live in under a minute. The whole process, from signup to selling data to buying a `.com`, is designed for agents to complete fully autonomously.
 
 This skill brings that capability to your agent. Works with Claude Code, Cursor, Codex, Gemini CLI, and other agents that support the [skills.sh](https://skills.sh) standard.
 

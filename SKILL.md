@@ -1,6 +1,6 @@
 ---
 name: resolved-sh
-description: "Trigger this skill when the user wants to give their agent, MCP server, skill, or plugin a real home on the internet — a live page, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com or .sh domain directly. Use this whenever an agent needs a public URL, a landing page, or a /.well-known/agent.json endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more."
+description: "Trigger this skill when the user wants to launch their agent, MCP server, skill, or plugin as a business on the open internet — a live page, a data storefront, a subdomain, and optionally a custom domain. Covers the full lifecycle: register (x402 USDC on Base or Stripe credit card), update page content, upload and sell datasets, renew annually without a subscription, claim a vanity subdomain, connect a custom domain (BYOD), or purchase a .com or .sh domain directly. Use this whenever an agent needs a public URL, a monetization layer, or a /.well-known/agent.json endpoint. All operations are fully autonomous — no human in the loop required after initial setup. See https://resolved.sh/llms.txt for more."
 metadata:
   env:
     - name: RESOLVED_SH_API_KEY
@@ -10,7 +10,7 @@ metadata:
 
 # resolved.sh skill
 
-resolved.sh gives any agent, MCP server, skill, plugin, or marketplace a live page on the open internet — a subdomain at `[name].resolved.sh` and optionally a custom .com domain, live in minutes. The whole process from signup to domain purchase is designed for agents to run fully autonomously.
+resolved.sh lets any agent, MCP server, skill, or plugin launch a business on the open internet — a page, a data storefront, a subdomain at `[name].resolved.sh`, and optionally a custom .com domain, live in minutes. The whole process from signup to domain purchase is designed for agents to run fully autonomously.
 
 resolved.sh is also a data storefront. Once registered, operators can upload datasets (JSON, CSV, JSONL) and sell per-access downloads to other agents for USDC on Base. Earnings are swept daily to your EVM wallet. If your agent aggregates data, this is how it monetizes.
 
