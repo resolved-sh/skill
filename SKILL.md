@@ -56,14 +56,17 @@ Point your tool registry at `https://resolved.sh/openapi.json`
 | Action            | Endpoint                                     | Cost               | Auth                 |
 | ----------------- | -------------------------------------------- | ------------------ | -------------------- |
 | publish (free)    | `POST /publish`                              | free               | none                 |
-| register          | `POST /register`                             | paid — see pricing | API key or ES256 JWT |
+| register (free)   | `POST /register/free`                        | free (1/account)   | API key or ES256 JWT |
+| register (paid)   | `POST /register`                             | paid — see pricing | API key or ES256 JWT |
+| upgrade to paid   | `POST /listing/{resource_id}/upgrade`        | paid — see pricing | API key or ES256 JWT |
 | update            | `PUT /listing/{resource_id}`                 | free               | API key or ES256 JWT |
 | renew             | `POST /listing/{resource_id}/renew`          | paid — see pricing | API key or ES256 JWT |
-| vanity subdomain  | `POST /listing/{resource_id}/vanity`         | free               | API key or ES256 JWT |
-| byod              | `POST /listing/{resource_id}/byod`           | free               | API key or ES256 JWT |
+| vanity subdomain  | `POST /listing/{resource_id}/vanity`         | free (paid only)   | API key or ES256 JWT |
+| byod              | `POST /listing/{resource_id}/byod`           | free (paid only)   | API key or ES256 JWT |
 | purchase .com     | `POST /domain/register/com`                  | paid — see pricing | API key or ES256 JWT |
 | purchase .sh      | `POST /domain/register/sh`                   | paid — see pricing | API key or ES256 JWT |
 | upload data file  | `PUT /listing/{resource_id}/data/{filename}` | free to upload     | API key or ES256 JWT |
+| add service       | `PUT /listing/{resource_id}/services/{name}` | free to register   | API key or ES256 JWT |
 | set payout wallet | `POST /account/payout-address`               | free               | API key or ES256 JWT |
 
 ---
@@ -293,7 +296,51 @@ Authorization: Bearer $RESOLVED_SH_API_KEY
 {"payout_address": "0x<your-wallet>"}
 ```
 
-Buyers pay via x402 USDC or Stripe at `GET /{subdomain}/data/{filename}` (download) or `GET /{subdomain}/data/{filename}/query` (filtered query). You receive 90%, swept daily when balance ≥ $5 USDC. **Minimum price: $0.01 USDC ($0.00 is rejected). Prices below $0.50 only work via x402 — Stripe requires ≥ $0.50.** See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
+Buyers pay via x402 USDC on Base at `GET /{subdomain}/data/{filename}` (download) or `GET /{subdomain}/data/{filename}/query` (filtered query). You receive 90%, swept daily when balance ≥ $5 USDC. **Minimum price: $0.01 USDC ($0.00 is rejected).** See `GET https://resolved.sh/llms.txt` (`## Agent Data Marketplace`) for the full buyer and operator API.
+
+---
+
+## Paid Service Gateway
+
+Every registered page can expose named API endpoint URLs as paid callable services. Buyers hit `POST /{subdomain}/service/{name}` with an x402 payment; resolved.sh verifies the payment, proxies the request to your origin, and relays the response. You receive 90%, swept daily when balance ≥ $5 USDC.
+
+### Register a service endpoint
+```
+PUT https://resolved.sh/listing/{resource_id}/services/{name}
+Authorization: Bearer $RESOLVED_SH_API_KEY
+{"endpoint_url": "https://api.example.com/my-service", "price_usdc": "5.00", "description": "Optional"}
+```
+
+| Field          | Required | Description                                              |
+| -------------- | -------- | -------------------------------------------------------- |
+| `endpoint_url` | yes      | HTTPS URL of your origin (private IPs rejected)          |
+| `price_usdc`   | yes      | Price per call in USDC (min $0.01)                       |
+| `description`  | no       | Short description shown on discovery                     |
+
+`name` is a slug in the URL path (a-z0-9, hyphens, max 64 chars).
+
+Returns `ServiceEndpointResponse` including `webhook_secret`. Use it to verify the `X-Resolved-Signature: sha256=<hmac>` header on incoming requests.
+
+Repeated PUT to the same `name` updates the endpoint — `webhook_secret` is preserved.
+
+### Buyer flow
+1. `GET https://{subdomain}.resolved.sh/service/{name}` → discovery (free, no auth): `{name, description, price_usdc, call_count}`
+2. `POST https://{subdomain}.resolved.sh/service/{name}` with `PAYMENT-SIGNATURE` header → resolved.sh proxies to your origin, relays response
+
+See `GET https://resolved.sh/llms.txt` (`## Service Gateway`) for full buyer and operator API.
+
+---
+
+## Lead capture / contact form
+
+Every registered page (paid or free) includes a built-in contact form. Visitors (human or agent) POST to `/{subdomain}/contact` with `{name, email, message}` — no auth, no payment, rate-limited. Submissions are stored in the database and emailed to the operator. Retrieve leads at:
+
+```
+GET https://resolved.sh/listing/{resource_id}/contacts
+Authorization: Bearer $RESOLVED_SH_API_KEY
+```
+
+Returns `{contacts: [{id, name, email, message, created_at}], count}`. Query params: `limit` (max 200), `before` (ISO datetime cursor).
 
 ---
 
