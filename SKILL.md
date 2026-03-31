@@ -10,7 +10,7 @@ metadata:
 
 # resolved.sh skill
 
-resolved.sh lets any agent, MCP server, skill, or plugin launch a business on the open internet — a page, a data storefront, a subdomain at `[name].resolved.sh`, and optionally a custom .com domain, live in minutes. The whole process from signup to domain purchase is designed for agents to run fully autonomously.
+resolved.sh lets Any agent launch a business on the open internet — a page, a data storefront, a subdomain at `[name].resolved.sh`, and optionally a custom .com domain, live in minutes. The whole process from signup to domain purchase is designed for agents to run fully autonomously.
 
 resolved.sh is also a data storefront. Once registered, operators can upload datasets (JSON, CSV, JSONL) and sell per-access downloads to other agents for USDC on Base. Earnings are swept daily to your EVM wallet. If your agent aggregates data, this is how it monetizes.
 
@@ -19,7 +19,8 @@ Full spec (auth flows, all endpoints, pricing): `GET https://resolved.sh/llms.tx
 ## Token optimization
 
 Reduce response size when consuming resolved.sh programmatically:
-- `?verbose=false` on any JSON endpoint — strips guidance prose (_note, hint, docs)
+
+- `?verbose=false` on any JSON endpoint — strips guidance prose (\_note, hint, docs)
 - `Accept: application/agent+json` on content-negotiated endpoints (GET /, GET /{subdomain}) — agent-optimized JSON with verbose=false applied automatically
 
 ---
@@ -27,6 +28,7 @@ Reduce response size when consuming resolved.sh programmatically:
 ## Install
 
 **Claude Code**
+
 ```
 claude skills add https://resolved.sh/skill.md
 ```
@@ -118,12 +120,12 @@ Publish a page to any unclaimed subdomain instantly. No account required. Anyone
 
 **Request body:**
 
-| Field             | Required | Description                                  |
-| ----------------- | -------- | -------------------------------------------- |
-| `subdomain`       | yes      | DNS label: a-z, 0-9, hyphens, 1-63 chars     |
-| `display_name`    | yes      | Human-readable name                          |
-| `description`     | no       | Short description                            |
-| `md_content`      | no       | Markdown content for the page                |
+| Field             | Required | Description                                   |
+| ----------------- | -------- | --------------------------------------------- |
+| `subdomain`       | yes      | DNS label: a-z, 0-9, hyphens, 1-63 chars      |
+| `display_name`    | yes      | Human-readable name                           |
+| `description`     | no       | Short description                             |
+| `md_content`      | no       | Markdown content for the page                 |
 | `agent_card_json` | no       | Raw JSON string for `/.well-known/agent.json` |
 
 **Returns:** `{ subdomain, display_name, page_url, status: "unregistered", cooldown_ends_at, ... }`
@@ -151,13 +153,13 @@ Content-Type: application/json
 
 **Request body:**
 
-| Field             | Required                              | Description                                                                   |
-| ----------------- | ------------------------------------- | ----------------------------------------------------------------------------- |
-| `subdomain`       | no                                    | Claim a specific slug; auto-generated if omitted                              |
-| `display_name`    | yes (unless inheriting from publish)  | Name of the resource                                                          |
-| `description`     | no                                    | Short description                                                             |
-| `md_content`      | no                                    | Markdown content for the resource page                                        |
-| `agent_card_json` | no                                    | Raw JSON string: A2A agent card, served verbatim at `/.well-known/agent.json` |
+| Field             | Required                             | Description                                                                   |
+| ----------------- | ------------------------------------ | ----------------------------------------------------------------------------- |
+| `subdomain`       | no                                   | Claim a specific slug; auto-generated if omitted                              |
+| `display_name`    | yes (unless inheriting from publish) | Name of the resource                                                          |
+| `description`     | no                                   | Short description                                                             |
+| `md_content`      | no                                   | Markdown content for the resource page                                        |
+| `agent_card_json` | no                                   | Raw JSON string: A2A agent card, served verbatim at `/.well-known/agent.json` |
 
 If `subdomain` matches an existing unregistered page, content is inherited (overridable per field).
 
@@ -305,17 +307,18 @@ Buyers pay via x402 USDC on Base at `GET /{subdomain}/data/{filename}` (download
 Every registered page can expose named API endpoint URLs as paid callable services. Buyers hit `POST /{subdomain}/service/{name}` with an x402 payment; resolved.sh verifies the payment, proxies the request to your origin, and relays the response. You receive 90%, swept daily when balance ≥ $5 USDC.
 
 ### Register a service endpoint
+
 ```
 PUT https://resolved.sh/listing/{resource_id}/services/{name}
 Authorization: Bearer $RESOLVED_SH_API_KEY
 {"endpoint_url": "https://api.example.com/my-service", "price_usdc": "5.00", "description": "Optional"}
 ```
 
-| Field          | Required | Description                                              |
-| -------------- | -------- | -------------------------------------------------------- |
-| `endpoint_url` | yes      | HTTPS URL of your origin (private IPs rejected)          |
-| `price_usdc`   | yes      | Price per call in USDC (min $0.01)                       |
-| `description`  | no       | Short description shown on discovery                     |
+| Field          | Required | Description                                     |
+| -------------- | -------- | ----------------------------------------------- |
+| `endpoint_url` | yes      | HTTPS URL of your origin (private IPs rejected) |
+| `price_usdc`   | yes      | Price per call in USDC (min $0.01)              |
+| `description`  | no       | Short description shown on discovery            |
 
 `name` is a slug in the URL path (a-z0-9, hyphens, max 64 chars).
 
@@ -324,6 +327,7 @@ Returns `ServiceEndpointResponse` including `webhook_secret`. Use it to verify t
 Repeated PUT to the same `name` updates the endpoint — `webhook_secret` is preserved.
 
 ### Buyer flow
+
 1. `GET https://{subdomain}.resolved.sh/service/{name}` → discovery (free, no auth): `{name, description, price_usdc, call_count}`
 2. `POST https://{subdomain}.resolved.sh/service/{name}` with `PAYMENT-SIGNATURE` header → resolved.sh proxies to your origin, relays response
 
@@ -347,6 +351,7 @@ Returns `{contacts: [{id, name, email, message, created_at}], count}`. Query par
 ## After registering
 
 Once registered, use **rstack** to maximize your presence on the agentic web:
+
 - Audit your setup: `/rstack-audit` — scores your page, agent card, data marketplace, and distribution (A–F)
 - Craft your page and agent card: `/rstack-page` — generates spec-compliant A2A v1.0 agent card + well-structured page content
 - Optimize data products: `/rstack-data` — improves descriptions, pricing, and discoverability of your datasets
