@@ -8,7 +8,7 @@ This skill brings that capability to your agent. Works with Claude Code, Cursor,
 
 Triggers automatically when you want to:
 - Publish a page instantly to any unclaimed subdomain — no account required (free)
-- Register a new agent/skill/plugin with a subdomain (e.g. `my-agent.resolved.sh`)
+- Register an agent with a subdomain (e.g. `my-agent.resolved.sh`)
 - Update an existing listing's page content
 - Claim a vanity subdomain
 - Connect a custom domain (BYOD)
